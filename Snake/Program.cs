@@ -12,15 +12,8 @@ namespace Snake
         {
             Console.SetBufferSize(80, 25);
 
-            //Отрисовка рамки
-            HorizontalLine UpLine = new HorizontalLine(0, 78, 0, '+');
-            HorizontalLine DownLine = new HorizontalLine(0, 78, 24, '+');
-            VerticalLine LeftLine = new VerticalLine(0, 0, 24, '+');
-            VerticalLine RightLine = new VerticalLine(78, 0, 24, '+');
-            UpLine.DrawLine();
-            DownLine.DrawLine();
-            LeftLine.DrawLine();
-            RightLine.DrawLine();
+            Walls walls = new Walls(80, 25);
+            walls.Draw();
 
             //Отрисовка точек
             Point p = new Point(4, 5, '*');
@@ -31,8 +24,13 @@ namespace Snake
             Point food = foodCreator.CreateFood();
             food.Draw();
 
+            int sleeptime = 100;
             while(true)
             {
+                if(walls.isHit(snake)||snake.IsHitTail())
+                {
+                    break;
+                }
                 //Если нажата клавиша, сменить направление.
                 if(Console.KeyAvailable)
                 {
@@ -44,12 +42,19 @@ namespace Snake
                 //Если змейка съела еду, создать новую
                 if (snake.Eat(food))
                 {
-                    food = foodCreator.CreateFood();
+                    do
+                    { food = foodCreator.CreateFood(); }
+                    while (snake.IsHit(food));
                     food.Draw();
+                    if(sleeptime>50)
+                        sleeptime = sleeptime - 10;
                 }
                 //Задержка
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(sleeptime);
             }
+
+            Console.SetCursorPosition(35, 12);
+            Console.Write("Game Over!");
             Console.ReadLine();
         }
     }
