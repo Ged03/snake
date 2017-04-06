@@ -58,5 +58,35 @@ namespace Snake
                     break;
             }
         }
+        internal bool Eat (Point food)
+        {
+            Point head = GetNextPoint();
+            if(head.IsHit(food))
+            {
+                food.sym = head.sym;
+                food.Draw();
+                pList.Add(food);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /*
+        public bool intersection (Point cross)
+        {
+            bool rez;
+            foreach(Point sp in pList)
+            {
+                if(sp.IsHit(cross))
+                {
+                    rez = true;
+                }
+                return rez;
+            }
+        }
+        */
     }
 }
